@@ -1,0 +1,12 @@
+[Unit]
+Description="{{ lobe_name }}-redis-queue"
+PartOf={{ lobe_name }}-redis.target
+
+[Service]
+User={{ user }}
+Group={{ user }}
+Restart=always
+ExecStart={{ redis_server }} {{ redis_queue_config }}
+StandardOutput=file:{{ lobe_dir }}/logs/redis-queue.log
+StandardError=file:{{ lobe_dir }}/logs/redis-queue.error.log
+WorkingDirectory={{ sites_dir }}

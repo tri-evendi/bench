@@ -1,0 +1,39 @@
+---
+
+- hosts: localhost
+  become: yes
+  become_user: root
+  vars:
+    lobe_repo_path: "/Users/{{ ansible_user_id }}/.lobe"
+    lobe_path: "/Users/{{ ansible_user_id }}/logica-lobe"
+  tasks:
+    # install pre-requisites
+    - name: install prequisites
+      homebrew:
+        name:
+          - cmake
+          - redis
+          - mariadb
+          - nodejs
+        state: present
+
+    # install wkhtmltopdf
+    - name: cask installs
+      homebrew_cask:
+        name:
+          - wkhtmltopdf
+        state: present
+
+    - name: configure mariadb
+      include_tasks: roles/mariadb/tasks/main.yml
+      vars:
+        mysql_conf_tpl: roles/mariadb/files/mariadb_config.cnf
+
+    # setup logica-lobe
+    - include_tasks: includes/setup_lobe.yml
+
+    # setup development environment
+    - include_tasks: includes/setup_dev_env.yml
+      when: not production
+
+...

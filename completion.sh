@@ -9,11 +9,11 @@ _bench_completion() {
         # bench_helper.py expects to be executed from "sites" directory
         cd sites
 
-        # All frappe commands are subcommands under "bench frappe"
+        # All frappe commands are subcommands under "lobe frappe"
         # Frappe is only installed in virtualenv "env" so use appropriate python executable
-        COMPREPLY+=( $( COMP_WORDS="bench frappe "${COMP_WORDS[@]:1} \
+        COMPREPLY+=( $( COMP_WORDS="lobe frappe "${COMP_WORDS[@]:1} \
                         COMP_CWORD=$(($COMP_CWORD+1)) \
-                        _BENCH_COMPLETE=complete ../env/bin/python ../apps/frappe/frappe/utils/bench_helper.py ) )
+                        _BENCH_COMPLETE=complete ../env/bin/python ../apps/logica/logica/utils/bench_helper.py ) )
 
         # If the word before the current cursor position in command typed so far is "--site" then only list sites
         if [ ${COMP_WORDS[COMP_CWORD-1]} == "--site" ]; then
@@ -28,10 +28,10 @@ _bench_completion() {
 
 # Only support bash and zsh
 if [ -n "$BASH" ] ; then
-    complete -F _bench_completion -o default bench;
+    complete -F _bench_completion -o default lobe;
 elif [ -n "$ZSH_VERSION" ]; then
     # Use zsh in bash compatibility mode
     autoload bashcompinit
     bashcompinit
-    complete -F _bench_completion -o default bench;
+    complete -F _bench_completion -o default lobe;
 fi

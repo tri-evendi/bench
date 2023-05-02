@@ -1,0 +1,82 @@
+---
+  - name: Check if /tmp/.lobe exists
+    stat:
+      path: /tmp/.lobe
+    register: tmp_lobe
+
+  - name: Check if lobe_repo_path exists
+    stat:
+      path: '{{ lobe_repo_path }}'
+    register: lobe_repo_register
+
+  - name: move /tmp/.lobe if it exists
+    command: 'cp -R /tmp/.lobe {{ lobe_repo_path }}'
+    when: tmp_lobe.stat.exists and not lobe_repo_register.stat.exists
+
+  - name: install lobe
+    pip:
+      name: '{{ lobe_repo_path }}'
+      extra_args: '-e'
+    become: yes
+    become_user: root
+
+  - name: Overwrite lobe if required
+    file:
+      state: absent
+      path: "{{ lobe_path }}"
+    when: overwrite
+
+  - name: Check whether lobe exists
+    stat:
+      path: "{{ lobe_path }}"
+    register: lobe_stat
+
+  - name: Fix permissions
+    become_user: root
+    command: chown {{ logica_user }} -R {{ user_directory }}
+
+  - name:  python3 lobe init for develop
+    command: lobe init {{ lobe_path }} --logica-path {{ logica_repo_url }} --logica-branch {{ logica_branch }} --python {{ python }}
+    args:
+      creates: "{{ lobe_path }}"
+    when: not lobe_stat.stat.exists and not production
+
+  - name: python3 lobe init for production
+    command: lobe init {{ lobe_path }} --logica-path {{ logica_repo_url }} --logica-branch {{ logica_branch }} --python {{ python }}
+    args:
+      creates: "{{ lobe_path }}"
+    when: not lobe_stat.stat.exists and production
+
+  # setup common_site_config
+  - name: setup config
+    command: lobe setup config
+    args:
+      creates: "{{ lobe_path }}/sites/common_site_config.json"
+      chdir: "{{ lobe_path }}"
+
+  - include_tasks: setup_inputrc.yml
+
+  # Setup Procfile
+  - name: Setup Procfile
+    command: lobe setup procfile
+    args:
+      creates: "{{ lobe_path }}/Procfile"
+      chdir: "{{ lobe_path }}"
+
+  # Setup Redis env for RQ
+  - name: Setup Redis
+    command: lobe setup redis
+    args:
+      creates: "{{ lobe_path }}/config/redis_socketio.conf"
+      chdir: "{{ lobe_path }}"
+
+  # Setup an ERPNext site
+  - include_tasks: setup_erpnext.yml
+    when: not run_travis
+
+  # Setup Lobe for production environment
+  - include_tasks: setup_lobe_production.yml
+    vars:
+      lobe_path: "{{ user_directory }}/{{ lobe_name }}"
+    when: not run_travis and production
+...

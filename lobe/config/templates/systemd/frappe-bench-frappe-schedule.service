@@ -1,0 +1,12 @@
+[Unit]
+Description="{{ lobe_name }}-logica-schedule"
+PartOf={{ lobe_name }}-workers.target
+
+[Service]
+User={{ user }}
+Group={{ user }}
+Restart=always
+ExecStart={{ lobe_cmd }} schedule
+StandardOutput=file:{{ lobe_dir }}/logs/schedule.log
+StandardError=file:{{ lobe_dir }}/logs/schedule.error.log
+WorkingDirectory={{ lobe_dir }}

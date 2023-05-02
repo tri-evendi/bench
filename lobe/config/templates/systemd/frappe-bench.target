@@ -1,0 +1,6 @@
+[Unit]
+After=network.target
+Requires={{ lobe_name }}-web.target {{ lobe_name }}-workers.target {{ lobe_name }}-redis.target
+
+[Install]
+WantedBy=multi-user.target

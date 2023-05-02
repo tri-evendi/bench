@@ -1,11 +1,11 @@
 [project]
-name = "frappe-bench"
-description = "CLI to manage Multi-tenant deployments for Frappe apps"
+name = "logica-lobe"
+description = "CLI to manage Multi-tenant deployments for Logica apps"
 readme = "README.md"
 license = "GPL-3.0-only"
 requires-python = ">=3.7"
 authors = [
-    { name = "Frappe Technologies Pvt Ltd", email = "developers@frappe.io" },
+    { name = "Logica Technologies Pvt Ltd", email = "developers@logica.io" },
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -34,29 +34,29 @@ dynamic = [
 ]
 
 [project.scripts]
-bench = "bench.cli:cli"
+lobe = "lobe.cli:cli"
 
 [project.urls]
-Changelog = "https://github.com/frappe/bench/releases"
-Documentation = "https://frappeframework.com/docs/user/en/bench"
-Homepage = "https://frappe.io/bench"
-Source = "https://github.com/frappe/bench"
+Changelog = "https://github.com/logica/lobe/releases"
+Documentation = "https://frappeframework.com/docs/user/en/lobe"
+Homepage = "https://logica.io/lobe"
+Source = "https://github.com/logica/lobe"
 
 [build-system]
 requires = [
-    "hatchling>=1.6.0",
+    "hatchling>=0.25.1",
 ]
 build-backend = "hatchling.build"
 
 [tool.hatch.version]
-path = "bench/__init__.py"
+path = "lobe/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
-  "/bench"
+  "/lobe"
 ]
 
 [tool.hatch.build.targets.wheel]
 include = [
-  "/bench"
+  "/lobe"
 ]

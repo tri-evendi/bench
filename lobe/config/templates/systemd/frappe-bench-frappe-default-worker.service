@@ -1,0 +1,12 @@
+[Unit]
+Description="{{ lobe_name }}-logica-default-worker %I"
+PartOf={{ lobe_name }}-workers.target
+
+[Service]
+User={{ user }}
+Group={{ user }}
+Restart=always
+ExecStart={{ lobe_cmd }} worker --queue default
+StandardOutput=file:{{ lobe_dir }}/logs/worker.log
+StandardError=file:{{ lobe_dir }}/logs/worker.error.log
+WorkingDirectory={{ lobe_dir }}

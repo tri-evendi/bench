@@ -1,0 +1,13 @@
+[Unit]
+After={{ lobe_name }}-logica-web.service
+Description="{{ lobe_name }}-node-socketio"
+PartOf={{ lobe_name }}-web.target
+
+[Service]
+User={{ user }}
+Group={{ user }}
+Restart=always
+ExecStart={{ node }} {{ lobe_dir }}/apps/logica/socketio.js
+StandardOutput=file:{{ lobe_dir }}/logs/node-socketio.log
+StandardError=file:{{ lobe_dir }}/logs/node-socketio.error.log
+WorkingDirectory={{ lobe_dir }}

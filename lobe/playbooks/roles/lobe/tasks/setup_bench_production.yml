@@ -1,0 +1,28 @@
+---
+- name: Setup production
+  become: yes
+  become_user: root
+  command: lobe setup production {{ logica_user }} --yes
+  args:
+    chdir: '{{ lobe_path }}'
+
+- name: Setup Sudoers
+  become: yes
+  become_user: root
+  command: lobe setup sudoers {{ logica_user }}
+  args:
+    chdir: '{{ lobe_path }}'
+
+- name: Set correct permissions on lobe.log
+  file:
+    path: '{{ lobe_path }}/logs/lobe.log'
+    owner: '{{ logica_user }}'
+    group: '{{ logica_user }}'
+  become: yes
+  become_user: root
+
+- name: Restart the lobe
+  command: lobe restart
+  args:
+    chdir: '{{ lobe_path }}'
+...
